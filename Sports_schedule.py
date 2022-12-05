@@ -21,9 +21,15 @@ xijkl = []
 for i in range(n):
     x = []
     for j in range(n):
+        xi.append(Sports_schedule.addVar(lb=0.0, ub=1.0, vtype=GRB.INTEGER,
+                                        name="x_" + str(i) + "_" + str(j) ))
+        xi = []
         for k in range(w):
+            xij.append(Sports_schedule.addVar(lb=0.0, ub=1.0, vtype=GRB.INTEGER,
+                                             name="x_" + str(i) + "_" + str(j)+ "_" + str(k)))
+            xij = []
             for l in range(p):
-                x.append(Sports_schedule.addVar(lb=0.0, ub=1.0, vtype=GRB.INTEGER,name="x_"+str(i)+"_"+str(j)+"_"+str(k)+"_"+str(l)))
+                xijk.append(Sports_schedule.addVar(lb=0.0, ub=1.0, vtype=GRB.INTEGER,name="x_"+str(i)+"_"+str(j)+"_"+str(k)+"_"+str(l)))
     xijkl.append(x)
 
 
@@ -47,7 +53,7 @@ for i in range(n):
         for l in range(p):
             for j in range(n):
                 if i!=j:
-                    sum = sum + xijkl[i][j][k][l]
+                    sum = sum + xijkl[i][j][k][l] + xijkl[j][i][k][l]
         Sports_schedule.addConstr(sum, GRB.EQUAL,1, "c2_"+str(i)+"_"+str(k))
 
 #c3
@@ -58,7 +64,7 @@ for i in range(n):
         for k in range(w):
             for j in range(n):
                 if i!=j:
-                    sum = sum + xijkl[i][j][k][l]
+                    sum = sum + xijkl[i][j][k][l] + xijkl[j][i][k][l]
         Sports_schedule.addConstr(sum, GRB.LESS_EQUAL,2, "c3_"+str(i)+"_"+str(l))
 
 #c4
@@ -68,7 +74,7 @@ for k in range(w):
         sum = 0
         for i in range(n):
             for j in range(n):
-                sum = sum + xijkl[i][j][k][l]
+                sum = sum + xijkl[i][j][k][l] + xijkl[j][i][k][l]
         Sports_schedule.addConstr(sum, GRB.EQUAL,1, "c4_"+str(k)+"_"+str(l))
 
 #c5
